@@ -7,11 +7,10 @@ import { useAuth } from "@/src/hooks/AuthContext";
 import theme from "@/src/util/theme";
 import { useNavigation } from "@react-navigation/native";
 
-export default function LoginScreen() {
+export default () => {
     const { setLoginUser } = useAuth();
     const navigation = useNavigation();
 
-    // ...existing code from login.tsx...
     const [phone, setPhone] = useState("");
     const [phoneError, setPhoneError] = useState("");
 
@@ -62,10 +61,14 @@ export default function LoginScreen() {
         }
 
         setLoginUser(response.user);
-        setTimeout(() => navigation.reset({
-            index: 0,
-            routes: [{ name: 'MainTabs' as never }],
-        }), 300);
+        setTimeout(
+            () =>
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: "MainTabs" as never }],
+                }),
+            300
+        );
     };
 
     const handleRecoverPIN = async () => {
@@ -149,7 +152,7 @@ export default function LoginScreen() {
             </View>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {

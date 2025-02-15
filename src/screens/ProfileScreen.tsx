@@ -1,15 +1,22 @@
 import { useAuth } from "@/src/hooks/AuthContext";
 import theme from "@/src/util/theme";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { CompositeScreenProps, useIsFocused, useNavigation } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { Image, StyleSheet, View } from "react-native";
 import { Button, Divider, List, Switch, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { TabStackParamList } from "../App";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 
-export default function ProfileScreen() {
+type Props = CompositeScreenProps<
+    BottomTabScreenProps<TabStackParamList, "Profile">,
+    NativeStackScreenProps<any>
+>;
+
+export default ({ navigation }: Props) => {
     const { user, logout } = useAuth();
     const isFocused = useIsFocused();
-    const navigation = useNavigation();
 
     const isFemale = +user!.pesel[9] % 2 === 0;
 
@@ -38,7 +45,7 @@ export default function ProfileScreen() {
                 <List.Item
                     title="Wypożyczenia"
                     left={(props) => <List.Icon {...props} icon="account" />}
-                    onPress={() => navigation.navigate("Rentals" as never)}
+                    onPress={() => navigation.navigate("Map", { screen: "Rentals" })}
                 />
                 <Divider />
                 <List.Item
@@ -56,10 +63,7 @@ export default function ProfileScreen() {
                 Ustawienia
             </Text>
             <View style={styles.box}>
-                <List.Item
-                    title="Agresywnie wibruj"
-                    right={(props) => <Switch {...props} />}
-                />
+                <List.Item title="Agresywnie wibruj" right={(props) => <Switch {...props} />} />
             </View>
 
             <Button mode="outlined" icon="logout" style={{ margin: 16 }} onPress={logout}>
@@ -67,7 +71,7 @@ export default function ProfileScreen() {
             </Button>
         </SafeAreaView>
     );
-}
+};
 
 const styles = StyleSheet.create({
     profileBox: {
