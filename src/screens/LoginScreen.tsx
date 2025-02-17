@@ -2,14 +2,13 @@ import { Image, Linking, TextInput as RNTextInput } from "react-native";
 import { useState, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, HelperText, TextInput } from "react-native-paper";
-import { login, recoverPin } from "@/src/util/api";
-import { useAuth } from "@/src/hooks/AuthContext";
-import theme from "@/src/util/theme";
-import { useNavigation } from "@react-navigation/native";
+import { login, recoverPin } from "@/util/api";
+import { useAuth } from "@/hooks/AuthContext";
+import { StatusBar } from "expo-status-bar";
+import theme from "@/util/theme";
 
 export default () => {
-    const { setLoginUser } = useAuth();
-    const navigation = useNavigation();
+    const { setLoginUser, apiKey } = useAuth();
 
     const [phone, setPhone] = useState("");
     const [phoneError, setPhoneError] = useState("");
@@ -51,7 +50,11 @@ export default () => {
     const handleLogin = async (forcePin?: string) => {
         setLoginLoading(true);
 
-        const response = await login(phone.replace(/[^0-9]/g, ""), forcePin || pin.replace(/[^0-9]/g, ""));
+        const response = await login(
+            phone.replace(/[^0-9]/g, ""),
+            forcePin || pin.replace(/[^0-9]/g, ""),
+            apiKey!
+        );
 
         if (response.error) {
             setPhoneError("Nieprawidłowy numer telefonu");
@@ -61,14 +64,6 @@ export default () => {
         }
 
         setLoginUser(response.user);
-        setTimeout(
-            () =>
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: "MainTabs" as never }],
-                }),
-            300
-        );
     };
 
     const handleRecoverPIN = async () => {
@@ -76,13 +71,15 @@ export default () => {
 
         setRecoverLoading(true);
 
-        await recoverPin(phone.replace(/[^0-9]/g, ""));
+        await recoverPin(phone.replace(/[^0-9]/g, ""), apiKey!);
 
         setTimeout(() => setRecoverLoading(false), 4500);
     };
 
     return (
         <View style={styles.container}>
+            <StatusBar style="light" />
+
             <Image source={require("@/assets/veturilo.png")} style={styles.logo} />
 
             <View style={styles.inputContainer}>

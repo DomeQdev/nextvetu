@@ -1,22 +1,28 @@
-import { useAuth } from "@/src/hooks/AuthContext";
-import { NavigationContainer, NavigatorScreenParams } from "@react-navigation/native";
+import { useAuth } from "@/hooks/AuthContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { BottomNavigation, Icon } from "react-native-paper";
-import LoginScreen from "./screens/LoginScreen";
-import MapScreen, { MapStackParamList } from "./screens/MapScreen";
 import ProfileScreen from "./screens/ProfileScreen";
-import theme from "./util/theme";
+import LoginScreen from "./screens/LoginScreen";
+import MapScreen from "./screens/MapScreen";
+import { useNavigationState } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
-
-export type TabStackParamList = {
-    Map: NavigatorScreenParams<MapStackParamList>;
-    Profile: undefined;
-};
 
 const TabNavigator = () => {
+    const navigationState = useNavigationState((state) => state);
+
+    const getRouteName = () => {
+        const routes = navigationState?.routes;
+        const currentTab = routes?.[navigationState.index];
+        const nestedState = currentTab?.state;
+        return nestedState?.routes?.[nestedState.index!]?.name;
+    };
+
+    const shouldShowTab = () => {
+        const currentRoute = getRouteName();
+        return !["ProfileRentals"].includes(currentRoute!);
+    };
+
     return (
         <Tab.Navigator
             screenOptions={{
@@ -26,6 +32,9 @@ const TabNavigator = () => {
                 <BottomNavigation.Bar
                     navigationState={state}
                     safeAreaInsets={insets}
+                    style={{
+                        display: shouldShowTab() ? "flex" : "none",
+                    }}
                     onTabPress={({ route, preventDefault }) => {
                         const event = navigation.emit({
                             type: "tabPress",
@@ -70,27 +79,11 @@ const TabNavigator = () => {
     );
 };
 
-export default function App() {
+export default () => {
     const { user, isLoading } = useAuth();
 
     if (isLoading) return null;
 
-    return (
-        <NavigationContainer>
-            <Stack.Navigator
-                screenOptions={{
-                    headerShown: false,
-                    contentStyle: {
-                        backgroundColor: theme.colors.background,
-                    },
-                }}
-            >
-                {!user ? (
-                    <Stack.Screen name="Login" component={LoginScreen} />
-                ) : (
-                    <Stack.Screen name="MainTabs" component={TabNavigator} />
-                )}
-            </Stack.Navigator>
-        </NavigationContainer>
-    );
-}
+    if (user) return <TabNavigator />;
+    return <LoginScreen />;
+};

@@ -1,4 +1,5 @@
 export type APIResponse<T> = Promise<T & { error?: { message: string } }>;
+export type Location = [number, number];
 
 export type User = {
     active: boolean;
@@ -18,11 +19,13 @@ export type Rental = {
     node: "rental";
     id: number;
     bike: string;
-    electric_lock: boolean;
     biketype: number;
+    domain: string;
+    start_place: number;
     start_place_lat: number;
     start_place_lng: number;
     start_place_name: string;
+    end_place: number;
     end_place_lat: number;
     end_place_lng: number;
     end_place_name: string;
@@ -33,10 +36,7 @@ export type Rental = {
     distance: number;
 };
 
-type Transaction = {
-    node: "transaction";
-    id: number;
-    date: string;
-    amount: number;
-    text: string;
+export type UnlockLink = {
+    link_url: string;
+    option: "transferuj_cc" | "transferuj_freeamount" | "tpay_card_register";
 };

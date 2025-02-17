@@ -1,12 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SplashScreen from "expo-splash-screen";
-import { User } from "@/src/util/typings";
-import { getUser } from "@/src/util/api";
+import { User } from "@/util/typings";
+import { getAPIKey, getUser } from "@/util/api";
 
 type AuthContextType = {
     isLoading: boolean;
     user: User | null;
+    apiKey: string | null;
     setLoginUser: (user: User) => Promise<void>;
     logout: () => Promise<void>;
 };
@@ -14,24 +15,27 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType>({
     isLoading: true,
     user: null,
+    apiKey: null,
     setLoginUser: async () => {},
     logout: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [apiKey, setApiKey] = useState<string | null>(null);
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         checkLoginStatus();
-        SplashScreen.hideAsync();
     }, []);
 
     const checkLoginStatus = async () => {
-        const loginKey = await AsyncStorage.getItem("loginKey");
+        const key = await getAPIKey();
+        setApiKey(key);
 
+        const loginKey = await AsyncStorage.getItem("loginKey");
         if (loginKey) {
-            const user = await getUser(loginKey);
+            const user = await getUser(loginKey, key);
 
             if (user.user) {
                 setUser(user.user);
@@ -39,6 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         setIsLoading(false);
+        SplashScreen.hideAsync();
     };
 
     const setLoginUser = async (user: User) => {
@@ -54,7 +59,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isLoading, user, setLoginUser, logout }}>
+        <AuthContext.Provider value={{ isLoading, user, apiKey, setLoginUser, logout }}>
             {children}
         </AuthContext.Provider>
     );
