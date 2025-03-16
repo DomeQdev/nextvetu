@@ -1,4 +1,4 @@
-package com.domeq.nextvetu
+package com.zbiorkom.bike
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

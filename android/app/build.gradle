@@ -94,9 +94,9 @@ packagingOptions {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.domeq.nextvetu'
+    namespace 'com.zbiorkom.bike'
     defaultConfig {
-        applicationId 'com.domeq.nextvetu'
+        applicationId 'com.zbiorkom.bike'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

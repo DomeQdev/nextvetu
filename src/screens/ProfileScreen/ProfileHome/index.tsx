@@ -32,7 +32,13 @@ export default (props: NativeStackScreenProps<ProfileStackParamList, "ProfileHom
             <ProfileActions {...props} />
             <ProfileSettings />
 
-            <Button mode="outlined" icon="logout" style={{ margin: 16 }} onPress={logout}>
+            <Button
+                mode="outlined"
+                icon="logout"
+                textColor={theme.colors.onPrimary}
+                style={{ margin: 16 }}
+                onPress={logout}
+            >
                 Wyloguj się
             </Button>
         </SafeAreaView>

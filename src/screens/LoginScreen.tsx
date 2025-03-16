@@ -80,7 +80,7 @@ export default () => {
         <View style={styles.container}>
             <StatusBar style="light" />
 
-            <Image source={require("@/assets/veturilo.png")} style={styles.logo} />
+            <Image source={require("@/assets/logo.png")} style={styles.logo} />
 
             <View style={styles.inputContainer}>
                 <TextInput
@@ -134,12 +134,14 @@ export default () => {
             <View style={styles.secondButtons}>
                 <Button
                     mode="text"
+                    textColor={theme.colors.onPrimary}
                     onPress={() => Linking.openURL("https://account.nextbike.pl/pl-PL/pl/register")}
                 >
                     Zarejestruj się
                 </Button>
                 <Button
                     mode="text"
+                    textColor={theme.colors.onPrimary}
                     onPress={handleRecoverPIN}
                     loading={recoverLoading}
                     disabled={recoverLoading}

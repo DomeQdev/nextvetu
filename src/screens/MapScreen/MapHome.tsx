@@ -1,14 +1,17 @@
-import { MapChildrenPortal } from "@/hooks/MapContext";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
+import MapMarkers from "./MapMarkers";
+import { MapNavigation } from "./MapRouter";
 
-export default () => {
+export default ({ navigation }: { navigation: MapNavigation }) => {
     return (
-        <MapChildrenPortal>
+        <>
+            <MapMarkers navigation={navigation} />
+
             <Button icon="qrcode-scan" mode="contained" style={styles.rentButton} onPress={() => {}}>
                 Hello, World!
             </Button>
-        </MapChildrenPortal>
+        </>
     );
 };
 

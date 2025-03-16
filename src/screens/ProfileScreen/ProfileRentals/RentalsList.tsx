@@ -20,9 +20,14 @@ export default ({ rentals, activeRental, setActiveRental }: Props) => {
             ref={listRef}
             data={rentals}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
                 <RentalOnList
                     rental={item}
+                    // displayDate={
+                    //     index === 0 ||
+                    //     new Date(item.start_time * 1000).toLocaleDateString("pl-PL") !==
+                    //         new Date(rentals[index - 1].start_time * 1000).toLocaleDateString("pl-PL")
+                    // }
                     isActive={item.id === activeRental?.id}
                     setActive={() => {
                         listRef.current?.scrollToItem({ item, animated: true });

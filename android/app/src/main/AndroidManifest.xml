@@ -24,8 +24,8 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="myapp"/>
-        <data android:scheme="com.domeq.nextvetu"/>
+        <data android:scheme="zbiorkom.bike"/>
+        <data android:scheme="com.zbiorkom.bike"/>
       </intent-filter>
     </activity>
   </application>

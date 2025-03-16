@@ -1,6 +1,47 @@
-import { APIResponse, Location, Rental, UnlockLink, User } from "./typings";
+import { APIResponse, Flexzones, Location, MapFeatures, Rental, UnlockLink, User } from "./typings";
+
+export const DOMAINS = [
+    "ap",
+    "bm",
+    "bp",
+    "cw",
+    "dp",
+    "fp",
+    "gp",
+    "jp",
+    "jr",
+    "km",
+    "kr",
+    "lp",
+    "mk",
+    "np",
+    "oa",
+    "ob",
+    "or",
+    "os",
+    "pd",
+    "pg",
+    "pi",
+    "pj",
+    "pl",
+    "pn",
+    "po",
+    "ps",
+    "pu",
+    "pw",
+    "py",
+    "rm",
+    "rq",
+    "sm",
+    "tn",
+    "vw",
+    "zp",
+    "zy",
+    "zz",
+];
 
 const BASE = "https://api.nextbike.net/api";
+const BACKEND_BASE = "https://nextvetu.zbiorkom.live";
 
 export const getAPIKey = async () => {
     // return fetch("https://webview.nextbike.net/getAPIKey.json", {
@@ -10,7 +51,7 @@ export const getAPIKey = async () => {
     //     .then((res) => res.apiKey as string)
     //     .catch(() => "");
 
-    return "rXXqTgQZUPZ89lzB";
+    return "rXXqTgQZUPZ89lzB"; // (hard coded in nextbike app)
 };
 
 export const login = async (mobile: string, pin: string, apiKey: string) => {
@@ -75,6 +116,30 @@ export const getPaymentLinks = async (loginKey: string, apiKey: string) => {
         method: "POST",
         body: formData,
     }).then((res) => res.json() as APIResponse<{ unlocklinks: UnlockLink[] }>);
+};
+
+export const getFlexzones = async (apiKey: string, hash?: string) => {
+    const formData = new FormData();
+    formData.append("api_key", apiKey);
+    if (hash) formData.append("hash", hash);
+
+    return fetch(BASE + "/v1.1/getFlexzones.json", {
+        method: "POST",
+        body: formData,
+    })
+        .then((res) => res.json() as APIResponse<{ geojson: Flexzones }>)
+        .catch(() => null);
+};
+
+export const getFeatures = async (
+    bounds: GeoJSON.Position[] | undefined,
+    signal: AbortSignal
+): Promise<MapFeatures> => {
+    if (!bounds) return {};
+
+    return fetch(BACKEND_BASE + "/getFeatures?bounds=" + bounds, { signal })
+        .then((res) => res.json())
+        .catch(() => {});
 };
 
 export const getRoute = async (locations: Location[], signal: AbortSignal) => {

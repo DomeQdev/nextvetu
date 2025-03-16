@@ -40,3 +40,41 @@ export type UnlockLink = {
     link_url: string;
     option: "transferuj_cc" | "transferuj_freeamount" | "tpay_card_register";
 };
+
+export type Flexzones = {
+    hash: string;
+    nodeValue: GeoJSON.FeatureCollection<GeoJSON.Polygon, FlexzoneProperties>;
+};
+
+export type FlexzoneProperties = {
+    color: string;
+    fill: string;
+    name: string;
+    domain: string;
+    category: "free_return" | "chargeable_return";
+};
+
+export type Bike = [id: number, number: string, type: number, battery: number | null, location?: Location];
+
+export enum EBike {
+    id = 0,
+    number = 1,
+    type = 2,
+    battery = 3,
+    location = 4,
+}
+
+export type Station = [id: number, name: string, number: string, location: Location, bikes: Bike[]];
+
+export enum EStation {
+    id = 0,
+    name = 1,
+    number = 2,
+    location = 3,
+    bikes = 4,
+}
+
+export type MapFeatures = {
+    stations?: Station[];
+    freestandingBikes?: Bike[];
+};

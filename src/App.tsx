@@ -1,10 +1,11 @@
-import { useAuth } from "@/hooks/AuthContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useNavigationState } from "@react-navigation/native";
 import { BottomNavigation, Icon } from "react-native-paper";
+import { useAuth } from "@/hooks/AuthContext";
+
 import ProfileScreen from "./screens/ProfileScreen";
 import LoginScreen from "./screens/LoginScreen";
 import MapScreen from "./screens/MapScreen";
-import { useNavigationState } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 

@@ -14,7 +14,7 @@ export default () => {
             </Text>
             <View style={styles.box}>
                 <List.Item
-                    title="Wibrator gdy 20 min cum"
+                    title=":)"
                     onPress={() => setVibrate(!vibrate)}
                     right={() => <Switch selected={vibrate} />}
                 />

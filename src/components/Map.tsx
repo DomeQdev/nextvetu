@@ -1,5 +1,6 @@
-import { StyleProp, ViewStyle } from "react-native";
+import { useMapPortal } from "@/hooks/MapContext";
 import Mapbox from "@rnmapbox/maps";
+import { StyleProp, ViewStyle } from "react-native";
 
 Mapbox.setAccessToken(
     "pk.eyJ1IjoiZG9tZXEyYWx0IiwiYSI6ImNtNzZlNnV1cDA1aXoya3NlcDMyaXE0M3cifQ.790UTgjHsL7W6EMgzZFQ_Q"
@@ -7,19 +8,23 @@ Mapbox.setAccessToken(
 
 type Props = {
     style?: StyleProp<ViewStyle>;
-    ref?: React.RefObject<Mapbox.MapView>;
     children: React.ReactNode;
 };
 
-export default ({ style, ref, children }: Props) => (
-    <Mapbox.MapView
-        style={style}
-        ref={ref}
-        attributionEnabled={false}
-        logoEnabled={false}
-        scaleBarEnabled={false}
-        styleURL="mapbox://styles/domeq2alt/cm76e567v008i01r8eayq4ix8"
-    >
-        {children}
-    </Mapbox.MapView>
-);
+export default ({ style, children }: Props) => {
+    const { mapProps } = useMapPortal();
+
+    return (
+        <Mapbox.MapView
+            attributionEnabled={false}
+            logoEnabled={false}
+            scaleBarEnabled={false}
+            styleURL="mapbox://styles/domeq/cm5e9yo8c00ph01s9h3drbass"
+            pitchEnabled={false}
+            style={style}
+            {...mapProps}
+        >
+            {children}
+        </Mapbox.MapView>
+    );
+};

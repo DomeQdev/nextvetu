@@ -1,10 +1,11 @@
 import theme from "@/util/theme";
 import { Rental } from "@/util/typings";
-import { Image, StyleSheet } from "react-native";
-import { Text, TouchableRipple } from "react-native-paper";
+import { Image, StyleSheet, View } from "react-native";
+import { Icon, Text, TouchableRipple } from "react-native-paper";
 
 type Props = {
     rental: Rental;
+    displayDate?: boolean;
     isActive: boolean;
     setActive: () => void;
 };
@@ -30,23 +31,55 @@ type Props = {
 //     distance: number;
 // };
 
-export default ({ rental, isActive, setActive }: Props) => {
+export default ({ rental, displayDate, isActive, setActive }: Props) => {
     return (
-        <TouchableRipple style={[styles.rental, isActive && styles.rentalActive]} onPress={setActive}>
-            <>
-                <Image
-                    source={{
-                        uri: `https://static.nextbike.net/app/biketypes/type/${rental.domain}/${rental.biketype}/h200.png`,
-                    }}
-                    style={styles.image}
-                />
+        <View>
+            {displayDate && <Text>{new Date(rental.start_time * 1000).toLocaleDateString("pl-PL")}</Text>}
 
-                <Text>
-                    {rental.start_place_name} do {rental.end_place_name}, cena: {rental.price} {rental.price_service}
-                </Text>
-            </>
-        </TouchableRipple>
+            <TouchableRipple onPress={setActive}>
+                <View style={[styles.rental, isActive && styles.rentalActive]}>
+                    <RentalStations rental={rental} />
+
+                    <Image
+                        source={{
+                            uri: `https://static.nextbike.net/app/biketypes/type/${rental.domain}/${rental.biketype}/h200.png`,
+                        }}
+                        style={styles.image}
+                    />
+                </View>
+            </TouchableRipple>
+        </View>
     );
+};
+
+const RentalStations = ({ rental }: { rental: Rental }) => {
+    return (
+        <View style={styles.stationsContainer}>
+            <View style={styles.station}>
+                <Text>{getTimeString(rental.start_time)}</Text>
+                <StationIcon source="map-marker" />
+                <Text>{rental.start_place_name}</Text>
+            </View>
+
+            <View style={styles.station}>
+                <Text>{getTimeString(rental.end_time)}</Text>
+                <StationIcon source="flag-checkered" />
+                <Text>{rental.end_place_name}</Text>
+            </View>
+        </View>
+    );
+};
+
+const StationIcon = ({ source }: { source: string }) => {
+    return (
+        <View style={styles.stationIcon}>
+            <Icon source={source} size={16} color={theme.colors.onPrimaryContainer} />
+        </View>
+    );
+};
+
+const getTimeString = (time: number) => {
+    return new Date(time * 1000).toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" });
 };
 
 const styles = StyleSheet.create({
@@ -60,9 +93,23 @@ const styles = StyleSheet.create({
     rentalActive: {
         borderColor: theme.colors.primary,
         borderWidth: 2,
+        padding: 14,
+    },
+    stationsContainer: {
+        flex: 1,
+        flexDirection: "column",
+        zIndex: 10,
+    },
+    station: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    stationIcon: {
+        backgroundColor: theme.colors.primaryContainer,
+        borderRadius: 8,
+        padding: 6,
     },
     image: {
-        // make it as a background image with low opacity
         position: "absolute",
         top: 0,
         right: 0,

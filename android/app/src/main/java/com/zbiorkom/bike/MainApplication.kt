@@ -1,4 +1,4 @@
-package com.domeq.nextvetu
+package com.zbiorkom.bike
 
 import android.app.Application
 import android.content.res.Configuration
